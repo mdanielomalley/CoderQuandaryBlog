@@ -22,7 +22,7 @@ namespace CoderQuandaryBlog.Controllers
         // GET: Comments
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Comments.Include(c => c.Moderator).Include(c => c.Post);
+            var applicationDbContext = _context.Comments.Include(c => c.BlogUser).Include(c => c.Moderator).Include(c => c.Post);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -35,6 +35,7 @@ namespace CoderQuandaryBlog.Controllers
             }
 
             var comment = await _context.Comments
+                .Include(c => c.BlogUser)
                 .Include(c => c.Moderator)
                 .Include(c => c.Post)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -49,6 +50,7 @@ namespace CoderQuandaryBlog.Controllers
         // GET: Comments/Create
         public IActionResult Create()
         {
+            ViewData["BlogUserId"] = new SelectList(_context.Users, "Id", "Id");
             ViewData["ModeratorId"] = new SelectList(_context.Users, "Id", "Id");
             ViewData["PostId"] = new SelectList(_context.Posts, "Id", "Abstract");
             return View();
@@ -59,7 +61,7 @@ namespace CoderQuandaryBlog.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,PostId,AuthorId,ModeratorId,Body,Created,Updated,Moderated,Deleted,ModeratedBody,ModerationType")] Comment comment)
+        public async Task<IActionResult> Create([Bind("Id,PostId,BlogUserId,ModeratorId,Body,Created,Updated,Moderated,Deleted,ModeratedBody,ModerationType")] Comment comment)
         {
             if (ModelState.IsValid)
             {
@@ -67,6 +69,7 @@ namespace CoderQuandaryBlog.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["BlogUserId"] = new SelectList(_context.Users, "Id", "Id", comment.BlogUserId);
             ViewData["ModeratorId"] = new SelectList(_context.Users, "Id", "Id", comment.ModeratorId);
             ViewData["PostId"] = new SelectList(_context.Posts, "Id", "Abstract", comment.PostId);
             return View(comment);
@@ -85,6 +88,7 @@ namespace CoderQuandaryBlog.Controllers
             {
                 return NotFound();
             }
+            ViewData["BlogUserId"] = new SelectList(_context.Users, "Id", "Id", comment.BlogUserId);
             ViewData["ModeratorId"] = new SelectList(_context.Users, "Id", "Id", comment.ModeratorId);
             ViewData["PostId"] = new SelectList(_context.Posts, "Id", "Abstract", comment.PostId);
             return View(comment);
@@ -95,7 +99,7 @@ namespace CoderQuandaryBlog.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,PostId,AuthorId,ModeratorId,Body,Created,Updated,Moderated,Deleted,ModeratedBody,ModerationType")] Comment comment)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,PostId,BlogUserId,ModeratorId,Body,Created,Updated,Moderated,Deleted,ModeratedBody,ModerationType")] Comment comment)
         {
             if (id != comment.Id)
             {
@@ -122,6 +126,7 @@ namespace CoderQuandaryBlog.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["BlogUserId"] = new SelectList(_context.Users, "Id", "Id", comment.BlogUserId);
             ViewData["ModeratorId"] = new SelectList(_context.Users, "Id", "Id", comment.ModeratorId);
             ViewData["PostId"] = new SelectList(_context.Posts, "Id", "Abstract", comment.PostId);
             return View(comment);
@@ -136,6 +141,7 @@ namespace CoderQuandaryBlog.Controllers
             }
 
             var comment = await _context.Comments
+                .Include(c => c.BlogUser)
                 .Include(c => c.Moderator)
                 .Include(c => c.Post)
                 .FirstOrDefaultAsync(m => m.Id == id);
