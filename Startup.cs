@@ -1,5 +1,7 @@
 using CoderQuandaryBlog.Data;
 using CoderQuandaryBlog.Models;
+using CoderQuandaryBlog.Services;
+using CoderQuandaryBlog.ViewModels;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -48,6 +50,13 @@ namespace CoderQuandaryBlog
 
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            //Register my custom DataService class
+            services.AddScoped<DataService>();
+
+            //Register a pre-configured instance of the mailsettings class
+            services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
+            services.AddScoped<IBlogEmailSender, EmailService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
