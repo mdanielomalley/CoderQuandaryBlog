@@ -21,6 +21,11 @@ namespace CoderQuandaryBlog.Models
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
+        
+        [StringLength(50, ErrorMessage = "The {0} must be at least {2} and no greater than {1} characters long", MinimumLength = 1)]
+        [Display(Name = "Display Name")]
+        public string DisplayName { get; set; }
+
         public byte[] ImageData { get; set; }
 
         [Display(Name = "Content Type")]

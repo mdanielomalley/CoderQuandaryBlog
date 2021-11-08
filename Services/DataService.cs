@@ -72,7 +72,7 @@ namespace CoderQuandaryBlog.Services
             var adminUser = new BlogUser()
             {
                 Email = "m.daniel.omalley@gmail.com",
-                UserName = "Dano",
+                UserName = "m.daniel.omalley@gmail.com",
                 FirstName = "Dan",
                 LastName = "O'Malley",
                 EmailConfirmed = true
@@ -90,7 +90,7 @@ namespace CoderQuandaryBlog.Services
             var modUser = new BlogUser()
             {
                 Email = "m.d.omalley@outlook.com",
-                UserName = "Danny",
+                UserName = "m.d.omalley@outlook.com",
                 FirstName = "Daniel",
                 LastName = "O'Malley",
                 EmailConfirmed = true
